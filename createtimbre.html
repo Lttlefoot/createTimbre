@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+	<button onclick="play()">Play</button>
+	<button onclick="stop()">Stop</button>
+	<div><input type="range" value=100></div>
+	<div><input type="range" value=0></div>
+	<div><input type="range" value=0></div>
+	<div><input type="range" value=0></div>
+	<div><input type="range" value=0></div>
+	<div><input type="range" value=0></div>
+	<div><input type="range" value=0></div>
+	<div><input type="range" value=0></div>
+	
+	<script type="text/javascript">
+		var real = new Float32Array(9);
+		var imag = new Float32Array(9);
+		context = new AudioContext();
+		oscillator = context.createOscillator();
+		oscillator.connect(context.destination);
+		context.suspend();		
+		oscillator.start(0);
+		real[0] = 1;
+		
+		function play() {
+			oscillator.frequency.cancelScheduledValues(context.currentTime);
+			var slds = document.querySelectorAll("input");
+			for (var i =0; i<8;i++){
+				real[i+1]=slds[i].value / Math.pow(2, i);
+			}
+			var wave = context.createPeriodicWave(real, imag);
+			oscillator.setPeriodicWave(wave);
+
+			var bhc=[0,0,0,0,3,3,3,0,0,0,3,3,0,0,-2,-2,
+			0,0,0,0,7,7,7,0,0,0,8,8,7,7,3,3,
+			0,0,7,7,12,12,0,-2,-2,-2,-5,-5,2,2,0];
+			var bhcf;
+			
+			for (var i=0;i<bhc.length;i++){
+				bhcf = 440 * Math.pow(2, bhc[i]/12.0);
+				oscillator.frequency.setTargetAtTime(bhcf, context.currentTime + i / 7, 0.01);
+			}
+			
+			context.resume();
+		}
+
+		function stop() {
+
+			context.suspend();
+		}
+	</script>
+
+</body>
+</html>
