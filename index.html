@@ -30,7 +30,7 @@
 			oscillator.frequency.cancelScheduledValues(context.currentTime);
 			var slds = document.querySelectorAll("input");
 			for (var i =0; i<8;i++){
-				real[i+1]=slds[i].value / Math.pow(2, i);
+				real[i+1]=slds[i].value / Math.pow(1.414, i);
 			}
 			var wave = context.createPeriodicWave(real, imag);
 			oscillator.setPeriodicWave(wave);
